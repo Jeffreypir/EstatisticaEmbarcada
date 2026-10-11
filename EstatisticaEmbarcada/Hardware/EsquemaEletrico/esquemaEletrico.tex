@@ -1,0 +1,199 @@
+\documentclass[border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage[american,siunitx]{circuitikz}
+
+\definecolor{modbox}{RGB}{214,234,242}
+\definecolor{nanobox}{RGB}{238,238,238}
+\definecolor{wCS}{RGB}{230,145,30}
+\definecolor{wMOSI}{RGB}{40,150,60}
+\definecolor{wMISO}{RGB}{140,60,170}
+\definecolor{wSCK}{RGB}{40,100,200}
+\definecolor{wDATA}{RGB}{0,140,160}
+\definecolor{wSOIL}{RGB}{90,90,90}
+\definecolor{ledG}{RGB}{40,170,60}
+\definecolor{ledY}{RGB}{225,175,0}
+\definecolor{ledR}{RGB}{215,35,35}
+
+\ctikzset{bipoles/length=1.1cm, resistors/scale=0.8, diodes/scale=0.7}
+
+\begin{document}
+\begin{circuitikz}[
+  font=\sffamily\small,
+  wire/.style={thick},
+  pin/.style={font=\scriptsize\ttfamily, inner sep=4pt},
+  net/.style={font=\scriptsize\ttfamily, fill=white, inner sep=1.5pt},
+  mod/.style={draw,thick,rounded corners=2pt,fill=modbox}
+]
+
+% ---------- Título ----------
+\node[font=\bfseries\large, align=center] at (2.5,9.3)
+  {Datalogger ambiental --- Esquema elétrico com pinagem};
+\node[font=\footnotesize] at (2.5,8.7)
+  {U1: Arduino Nano (ATmega328P, 5\,V, alimentado por USB)};
+
+% =====================================================
+% U1 -- ARDUINO NANO
+% =====================================================
+\draw[thick,rounded corners=3pt,fill=nanobox] (0,0) rectangle (5,7.2);
+\node[font=\bfseries] at (2.5,2.95) {U1};
+\node[font=\bfseries] at (2.5,2.5) {Arduino Nano};
+\node[font=\scriptsize] at (2.5,2.05) {ATmega328P};
+
+% pinos esquerda
+\node[pin,right] at (0,5.4) {A1\,/\,PC1};
+\node[pin,right] at (0,3.6) {A0\,/\,PC0};
+\node[pin,right] at (0,2.4) {5V};
+\node[pin,right] at (0,1.4) {GND};
+% pinos direita
+\node[pin,left] at (5,6.0) {D10\,/\,PB2};
+\node[pin,left] at (5,5.2) {D11\,/\,PB3};
+\node[pin,left] at (5,4.4) {D12\,/\,PB4};
+\node[pin,left] at (5,3.6) {D13\,/\,PB5};
+% pinos base
+\node[pin,above,rotate=90,anchor=west] at (0.8,0) {D2\,/\,PD2};
+\node[pin,above,rotate=90,anchor=west] at (2.5,0) {D3\,/\,PD3};
+\node[pin,above,rotate=90,anchor=west] at (4.2,0) {D4\,/\,PD4};
+
+% alimentação do Nano
+\draw[wire,red!80!black] (0,2.4) -- (-0.7,2.4) node[vcc,red!80!black]{+5V};
+\draw[wire] (0,1.4) -- (-0.7,1.4) node[ground]{};
+
+% =====================================================
+% S1 -- DHT11
+% =====================================================
+\node[mod,minimum width=3.4cm,minimum height=2cm,anchor=south west] at (-8.6,4.6) {};
+\node[font=\footnotesize\bfseries] at (-6.6,6.2) {S1 -- DHT11};
+\node[font=\scriptsize,align=center] at (-6.9,5.35) {Temperatura e\\umidade do ar};
+\node[pin,right] at (-8.6,6.1) {VCC};
+\node[pin,right] at (-8.6,5.1) {GND};
+\node[pin,left]  at (-5.2,5.4) {DATA};
+\draw[wire,red!80!black] (-8.6,6.1) -- (-9.2,6.1) node[vcc,red!80!black]{+5V};
+\draw[wire] (-8.6,5.1) -- (-9.2,5.1) node[ground]{};
+\draw[wire,wDATA] (-5.2,5.4) -- (0,5.4);
+\node[net] at (-2.6,5.4) {DHT\_DATA};
+
+% =====================================================
+% S2 -- HD-38
+% =====================================================
+\node[mod,minimum width=3.4cm,minimum height=2cm,anchor=south west] at (-8.6,2.0) {};
+\node[font=\footnotesize\bfseries] at (-6.6,3.6) {S2 -- HD-38};
+\node[font=\scriptsize,align=center] at (-6.9,2.75) {Umidade do solo\\(resistivo)};
+\node[pin,right] at (-8.6,3.5) {VCC};
+\node[pin,right] at (-8.6,2.5) {GND};
+\node[pin,left]  at (-5.2,3.6) {AO};
+\draw[wire,red!80!black] (-8.6,3.5) -- (-9.2,3.5) node[vcc,red!80!black]{+5V};
+\draw[wire] (-8.6,2.5) -- (-9.2,2.5) node[ground]{};
+\draw[wire,wSOIL] (-5.2,3.6) -- (0,3.6);
+\node[net] at (-2.6,3.6) {SOIL\_AO};
+\node[font=\scriptsize\itshape] at (-6.9,1.6) {DO (saída digital): não utilizado};
+
+% =====================================================
+% M1 -- MÓDULO SD
+% =====================================================
+\node[mod,minimum width=4.0cm,minimum height=4.6cm,anchor=south west] at (9,2.4) {};
+\node[font=\footnotesize\bfseries,align=center] at (11.0,5.75) {M1 -- Módulo\\cartão SD (SPI)};
+\node[font=\scriptsize,align=center] at (11.0,4.5) {microSD 16\,GB\\FAT};
+\node[pin,right,xshift=3pt] at (9,6.0) {CS};
+\node[pin,right,xshift=3pt] at (9,5.2) {MOSI};
+\node[pin,right,xshift=3pt] at (9,4.4) {MISO};
+\node[pin,right,xshift=3pt] at (9,3.6) {SCK};
+\node[pin,left] at (13.0,6.4) {VCC};
+\node[pin,left] at (13.0,3.0) {GND};
+\draw[wire,red!80!black] (13.0,6.4) -- (13.6,6.4) node[vcc,red!80!black]{+5V};
+\draw[wire] (13.0,3.0) -- (13.6,3.0) node[ground]{};
+
+\draw[wire,wCS]   (5,6.0) -- (9,6.0); \node[net] at (7,6.0) {SD\_CS};
+\draw[wire,wMOSI] (5,5.2) -- (9,5.2); \node[net] at (7,5.2) {SD\_MOSI};
+\draw[wire,wMISO] (5,4.4) -- (9,4.4); \node[net] at (7,4.4) {SD\_MISO};
+\draw[wire,wSCK]  (5,3.6) -- (9,3.6); \node[net] at (7,3.6) {SD\_SCK};
+
+% =====================================================
+% LEDs de sinalização
+% =====================================================
+\foreach \x/\ref/\rref/\col/\netn/\txt in {
+  0.8/D1/R1/ledG/LED\_G/{LED verde\\erro DHT11},
+  2.5/D2/R2/ledY/LED\_Y/{LED amarelo\\erro HD-38},
+  4.2/D3/R3/ledR/LED\_R/{LED vermelho\\erro SD}}{
+  \draw[wire] (\x,0) to[R, l_=\rref, -*] (\x,-2.2);
+  \draw[wire] (\x,-2.2) to[leD, color=\col, l_=\ref] (\x,-4.2)
+        node[ground]{};
+  \node[net] at (\x,-0.55) {\netn};
+  \node[font=\scriptsize,align=center,text width=1.65cm,below] at (\x,-4.6) {\txt};
+}
+
+% =====================================================
+% Legenda das cores dos fios
+% =====================================================
+\begin{scope}[shift={(7.6,0.2)}]
+  \node[font=\scriptsize\bfseries,anchor=west] at (0,0.3) {Legenda};
+  \node[font=\scriptsize,anchor=west] at (0,-2.3) {R1, R2, R3 = 220\,$\Omega$ (1/4\,W)};
+  \foreach \c/\t/\y in {wCS/SPI CS (D10)/-0.1, wMOSI/SPI MOSI (D11)/-0.45,
+                        wMISO/SPI MISO (D12)/-0.8, wSCK/SPI SCK (D13)/-1.15,
+                        wDATA/DHT11 DATA (A1)/-1.5, wSOIL/HD-38 AO (A0)/-1.85}{
+    \draw[wire,\c] (0,\y) -- (0.6,\y);
+    \node[font=\scriptsize,anchor=west] at (0.7,\y) {\t};
+  }
+\end{scope}
+
+% =====================================================
+% Tabela de pinagem
+% =====================================================
+\node[anchor=north west,font=\scriptsize] at (-9.2,-6.3) {%
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Pino Nano} & \textbf{Porta ATmega328P} & \textbf{Sentido} & \textbf{Conectado a} & \textbf{Função} \\
+\midrule
+A0   & PC0 (ADC0)  & Entrada analógica & S2 HD-38 -- AO   & Leitura da umidade do solo (\texttt{SOIL\_PIN}) \\
+A1   & PC1         & Entrada digital   & S1 DHT11 -- DATA & Temperatura e umidade do ar (\texttt{DHTPIN}) \\
+D2   & PD2         & Saída digital     & R1 $\rightarrow$ D1 (verde)    & Erro no DHT11 \\
+D3   & PD3         & Saída digital     & R2 $\rightarrow$ D2 (amarelo)  & Erro no HD-38 \\
+D4   & PD4         & Saída digital     & R3 $\rightarrow$ D3 (vermelho) & Erro no cartão SD \\
+D10  & PB2 (SS)    & Saída (SPI)       & M1 -- CS         & Chip select do SD (\texttt{SD\_CS\_PIN}) \\
+D11  & PB3 (MOSI)  & Saída (SPI)       & M1 -- MOSI       & Dados Nano $\rightarrow$ SD \\
+D12  & PB4 (MISO)  & Entrada (SPI)     & M1 -- MISO       & Dados SD $\rightarrow$ Nano \\
+D13  & PB5 (SCK)   & Saída (SPI)       & M1 -- SCK        & Clock SPI \\
+5V   & ---         & Alimentação       & VCC de S1, S2, M1 & +5\,V (via USB) \\
+GND  & ---         & Terra             & GND de S1, S2, M1 e catodos D1--D3 & Referência comum \\
+\bottomrule
+\end{tabular}};
+
+
+% =====================================================
+% Notas de projeto
+% =====================================================
+\node[anchor=north west,font=\scriptsize,text width=4.8cm,align=left] at (9.4,-6.3) {%
+\textbf{Notas}\\[2pt]
+1.~Alimentação de todos os módulos: +5\,V fornecidos pelo USB do Nano.\\
+2.~Módulo SD com regulador e conversor de nível integrados (módulo comum para Arduino); os sinais SPI do Nano (5\,V) ligam direto aos pinos do módulo.\\
+3.~DHT11 sem resistor de pull-up externo, conforme a montagem do protótipo (módulos de 3 pinos costumam trazer pull-up integrado).\\
+4.~HD-38: apenas a saída analógica (AO) é utilizada.\\
+5.~LEDs acendem com nível alto no pino (R em série, catodo no GND).\\
+6.~Confirmar a ordem dos pinos de cada módulo na serigrafia da placa.};
+
+% =====================================================
+% Moldura e carimbo (title block)
+% =====================================================
+\draw[thick] (-10.2,-14.2) rectangle (14.4,10.2);
+\node[anchor=north west,font=\scriptsize,inner sep=0pt] at (-10.2,-12.2) {%
+\setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{8.1cm}|>{\raggedright\arraybackslash}p{4.7cm}|>{\raggedright\arraybackslash}p{4.4cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{2.0cm}|}
+\hline
+\textbf{Projeto:} Plataforma Arduino aplicada à análise estatística de sensores ambientais &
+\textbf{Instituição:} Centro Universitário das Américas --- FAM &
+\textbf{Curso:} Ciência da Computação &
+\textbf{Folha:} 1/1 &
+\textbf{Rev.:} A \\
+\hline
+\textbf{Desenho:} Esquema elétrico do datalogger (U1, S1, S2, M1, R1--R3, D1--D3) &
+\textbf{Autor:} Jefferson Bezerra dos Santos &
+\textbf{Data:} outubro de 2026 &
+\multicolumn{2}{l|}{\textbf{Escala:} sem escala} \\
+\hline
+\end{tabular}};
+
+\end{circuitikz}
+\end{document}
