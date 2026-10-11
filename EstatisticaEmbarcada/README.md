@@ -118,7 +118,7 @@ No início de `datalogger_estatistico.ino`, confira os parâmetros:
 | `CORR_BUFFER_SIZE` | `12` | Tamanho do bloco de correlação |
 | `IQR_FACTOR` | `1.5` | Fator do critério de Tukey |
 | `SOIL_DRY_VALUE` / `SOIL_WET_VALUE` | `1023` / `300` | Limites do HD-38 (sem calibração) |
-| `REFERENCE_YEAR`, `REFERENCE_MONTH`, `REFERENCE_DAY`, `START_HOUR`, `START_MINUTE` | `2025`, `10`, `08`, `11`, `45` | Data e hora de início, somadas ao contador `millis()` |
+| `REFERENCE_YEAR`, `REFERENCE_MONTH`, `REFERENCE_DAY`, `START_HOUR`, `START_MINUTE` | `2025`, `10`, `08`, `11`, `00` | Data e hora de início, somadas ao contador `millis()` |
 
 Como o protótipo **não possui relógio de tempo real (RTC)**, a data e a hora dos registros são calculadas a partir de `millis()` somado ao horário inicial configurado nessas constantes. Os horários são aproximados e se perdem em caso de reinício da placa.
 

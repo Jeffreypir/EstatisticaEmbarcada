@@ -43,12 +43,12 @@
 #define SOIL_DRY_VALUE 1023     // Valor lido quando solo seco
 #define SOIL_WET_VALUE 300      // Valor lido quando solo saturado
 
-#define REFERENCE_YEAR 2026
-#define REFERENCE_MONTH 05
-#define REFERENCE_DAY 30
+#define REFERENCE_YEAR 2025
+#define REFERENCE_MONTH 8
+#define REFERENCE_DAY 10
 
 #define START_HOUR 11
-#define START_MINUTE 15
+#define START_MINUTE 00
 
 // ================= ESTRUTURAS DE DADOS =================
 struct Estatisticas {
