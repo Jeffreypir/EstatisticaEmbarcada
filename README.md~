@@ -151,7 +151,7 @@ O arquivo `Dados/coleta_2025-10-08_a_2025-10-10/DADOS.CSV` contém os registros 
 
 | Item | Valor |
 |---|---|
-| Período | 08/10/2025 às 11h45 até 10/10/2025 às 07h40 (cerca de 44 horas) |
+| Período | 08/10/2025 às 11h00 até 10/10/2025 às 07h40 (cerca de 44 horas) |
 | Intervalo entre registros | 5 minutos |
 | Registros | 536 (528 analisados, após o descarte das oito leituras iniciais, afetadas pelo preenchimento do buffer com zeros) |
 | Cenário | Ensaio controlado, em câmara de análise de solo |
