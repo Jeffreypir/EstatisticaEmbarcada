@@ -8,7 +8,7 @@ O sistema é um **datalogger embarcado com processamento na borda**. Não possui
 
 Este repositório reúne o firmware, o esquema elétrico, os dados brutos da coleta e o script de análise usados no Trabalho de Conclusão de Curso de Ciência da Computação (Centro Universitário das Américas, FAM, 2026).
 
-![Esquema elétrico do protótipo](Hardware/EsquemaEletrico/esquemaEletrico-1.png)
+![Esquema elétrico do protótipo](EstatisticaEmbarcada/Hardware/EsquemaEletrico/esquemaEletrico-1.png)
 
 ## Sumário
 
